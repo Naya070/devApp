@@ -5,11 +5,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { Rol } from 'src/roles/entities/rol.entity';
 import { Developer } from 'src/developers/entities/developer.entity';
 import { registerEnumType } from '@nestjs/graphql';
-
+import { Status } from 'src/status/entities/status.entity';
 enum statusType {
   'Active',
   'Pause',
@@ -57,9 +58,8 @@ export class Project {
   @Field({ nullable: true })
   description?: string;
   //status
-  @Column({ type: 'enum', enum: statusType })
-  @Field((type) => statusType)
-  status: statusType;
+  @OneToMany((type) => Status, (status) => status.name)
+  status: Status[];
   //ManyToMany relationship
   @ManyToMany(() => Rol, (rol) => rol.projects)
   @JoinTable()
