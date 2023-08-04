@@ -21,6 +21,7 @@ export class DevelopersService {
       where: {
         id,
       },
+      relations: ['roles', 'projects'],
     });
   }
   async findDevelopersByIds(ids: number[]): Promise<Developer[]> {
@@ -28,12 +29,12 @@ export class DevelopersService {
       where: {
         id: In(ids),
       },
+      relations: ['roles', 'projects'],
     });
   }
   async createDeveloper(developer: CreateDeveloperDto): Promise<Developer> {
     const roles = await this.rolesService.findRolesByIds(developer.rolesIds);
     developer['roles'] = roles;
-    console.log(developer);
     const newDeveloper = this.devRepository.create(developer);
     return this.devRepository.save(newDeveloper);
   }

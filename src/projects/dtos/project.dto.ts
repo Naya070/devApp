@@ -30,10 +30,10 @@ export class CreateProjectDto {
   @IsOptional()
   @Field((type) => statusType, { nullable: true })
   status?: statusType;
-  @IsOptional()
+  @IsNotEmpty()
   @Field(() => [Number], { nullable: true })
   rolesIds?: number[];
-  @IsNotEmpty()
+  @IsOptional()
   @Field(() => [Number], { nullable: true })
   developerIds?: number[];
 }
@@ -50,4 +50,14 @@ export class FilterProjectDto {
   @IsOptional()
   @Field(() => [Number], { nullable: true })
   rolesIds?: number[];
+}
+
+@InputType()
+export class AssignDeveloperToProjectDto {
+  @IsNotEmpty()
+  @Field(() => Int)
+  projectId: number;
+  @IsNotEmpty()
+  @Field(() => Int)
+  developerId: number;
 }

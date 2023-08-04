@@ -18,12 +18,14 @@ export class ProjectsService {
     private rolesService: RolesService,
     private devService: DevelopersService,
   ) {}
-  async findAll(filter: FilterProjectDto): Promise<Project[]> {
-    const roles = await this.rolesService.findRolesByIds(filter.rolesIds);
+  async findAll(filter?: FilterProjectDto): Promise<Project[]> {
+    const roles = filter?.rolesIds
+      ? await this.rolesService.findRolesByIds(filter.rolesIds)
+      : [];
 
     return this.projectRepository.find({
       where: {
-        status: filter.status,
+        status: filter?.status,
         roles: roles,
       },
     });
@@ -39,14 +41,18 @@ export class ProjectsService {
 
   async createProject(project: CreateProjectDto): Promise<Project> {
     const roles = await this.rolesService.findRolesByIds(project.rolesIds);
-    const developers = await this.devService.findDevelopersByIds(
-      project.developerIds,
-    );
+    const developers = project?.developerIds
+      ? await this.devService.findDevelopersByIds(project.developerIds)
+      : [];
     project['roles'] = roles;
     project['developers'] = developers;
-    console.log(project);
-    const newDeveloper = this.projectRepository.create(project);
-    return this.projectRepository.save(newDeveloper);
+    const newProject = this.projectRepository.create(project);
+
+    developers.forEach((developer) => {
+      this.validateSameRolesDeveloperAndProject(newProject, developer);
+    });
+
+    return this.projectRepository.save(newProject);
   }
 
   async getRoles(id: number): Promise<Rol[]> {
@@ -67,5 +73,29 @@ export class ProjectsService {
       relations: ['developers'],
     });
     return project.developers;
+  }
+
+  validateSameRolesDeveloperAndProject(project: Project, developer: Developer) {
+    const roles = project.roles.map((role) => role.id);
+    const developerRoles = developer.roles.map((role) => role.id);
+    const sameRoles = roles.filter((role) => developerRoles.includes(role));
+    if (sameRoles.length === 0) {
+      throw new Error(
+        `The developer ${developer.name} does not have the roles for the project ${project.name}`,
+      );
+    }
+  }
+
+  async assignDeveloperToProject(projectId: number, developerId: number) {
+    const project = await this.projectRepository.findOne({
+      where: {
+        id: projectId,
+      },
+      relations: ['developers', 'roles'],
+    });
+    const developer = await this.devService.findDeveloperById(developerId);
+    this.validateSameRolesDeveloperAndProject(project, developer);
+    project.developers = [...project.developers, developer];
+    return this.projectRepository.save(project);
   }
 }
