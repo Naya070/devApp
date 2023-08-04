@@ -10,7 +10,7 @@ import {
 } from '@nestjs/graphql';
 import { DevelopersService } from '../services/developers.service';
 import { Developer } from '../entities/developer.entity';
-import { CreateDeveloperDto } from '../dtos/developer.dto';
+import { CreateDeveloperDto, FilterDeveloperDto } from '../dtos/developer.dto';
 import { RolesService } from 'src/roles/services/roles.service';
 import { Rol } from 'src/roles/entities/rol.entity';
 @Resolver(Developer)
@@ -24,6 +24,12 @@ export class DevelopersResolver {
   findDeveloperById(@Args('id', { type: () => Int }) id: number) {
     return this.devService.findDeveloperById(id);
   }
+  // @Query(() => [Developer])
+  // filterProjectsByRolesAndStatus(
+  //   @Args('filter', { nullable: true }) filter?: FilterDeveloperDto,
+  // ) {
+  //   return this.developerService.findAll(filter);
+  // }
   @Mutation(() => Developer)
   createDeveloper(@Args('DeveloperInput') DeveloperInput: CreateDeveloperDto) {
     return this.devService.createDeveloper(DeveloperInput);

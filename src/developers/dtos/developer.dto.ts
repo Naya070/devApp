@@ -33,3 +33,13 @@ export class CreateDeveloperDto {
 
 @InputType()
 export class UpdateDeveloperDto extends PartialType(CreateDeveloperDto) {}
+
+@InputType()
+export class FilterDeveloperDto {
+  @IsOptional()
+  @Field(() => [Number], { nullable: true })
+  rolesIds?: number[];
+  @IsOptional()
+  @Field(() => [Number], { nullable: true })
+  projects?: number[];
+}
