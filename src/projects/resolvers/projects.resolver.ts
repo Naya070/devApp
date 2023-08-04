@@ -10,6 +10,7 @@ import {
 import { ProjectsService } from '../services/projects.service';
 import { Project } from '../entities/projects.entity';
 import {
+  AssignDeveloperToProjectDto,
   CreateProjectDto,
   FilterProjectDto,
   UpdateProjectDto,
@@ -19,8 +20,7 @@ import { Developer } from 'src/developers/entities/developer.entity';
 @Resolver(Project)
 export class ProjectsResolver {
   constructor(private projectService: ProjectsService) {}
-  @Query(() => [Project])
-  findAllByRolStatus(
+  findAllProject(
     @Args('filter', { nullable: true }) filter?: FilterProjectDto,
   ) {
     return this.projectService.findAllByRolStatus(filter);
@@ -34,10 +34,10 @@ export class ProjectsResolver {
   findProjectById(@Args('id', { type: () => Int }) id: number) {
     return this.projectService.findProjectById(id);
   }
-  // @Mutation((returns) => Project)
-  // createProject(@Args('ProjectInput') ProjectInput: CreateProjectDto) {
-  //   return this.projectService.createProject(ProjectInput);
-  // }
+  @Mutation((returns) => Project)
+  createProject(@Args('ProjectInput') ProjectInput: CreateProjectDto) {
+    return this.projectService.createProject(ProjectInput);
+  }
   @ResolveProperty(() => [Rol])
   async roles(@Parent() project: Project) {
     return this.projectService.getRoles(project.id);
@@ -45,5 +45,13 @@ export class ProjectsResolver {
   @ResolveProperty(() => [Developer])
   async developers(@Parent() project: Project) {
     return this.projectService.getDevelopers(project.id);
+  }
+  @Mutation(() => Project)
+  assignDeveloperToProject(
+    @Args('assignDeveloperToProjectInput')
+    assignDeveloperToProjectInput: AssignDeveloperToProjectDto,
+  ) {
+    const { projectId, developerId } = assignDeveloperToProjectInput;
+    return this.projectService.assignDeveloperToProject(projectId, developerId);
   }
 }

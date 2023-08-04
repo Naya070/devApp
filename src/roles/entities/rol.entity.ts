@@ -20,11 +20,10 @@ export class Rol {
   @Column({ type: 'varchar', length: 80, unique: true })
   @Field()
   name: string;
-  //Developer
+  //developers
   //No necesita JoinColum porque él automáticamente
-  //sabe que el decorador que el decorador que
-  // tiene la relación manyToOne es la que
-  //debe tener la FK
+  //sabe que el decorador que tiene la relación
+  //manyToOne es la que debe tener la FK.
   @ManyToMany(() => Developer, (developer) => developer.roles)
   developers: Developer[];
   //ManyToMany relationship

@@ -11,7 +11,6 @@ import { PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateRolDto {
-  //name
   @MinLength(1)
   @MaxLength(80)
   @IsNotEmpty()

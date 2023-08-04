@@ -25,7 +25,9 @@ export class DevelopersResolver {
     return this.devService.findDeveloperById(id);
   }
   @Query(() => [Developer])
-  findAll(@Args('filter', { nullable: true }) filter?: FilterDeveloperDto) {
+  findAllDevelopers(
+    @Args('filter', { nullable: true }) filter?: FilterDeveloperDto,
+  ) {
     return this.devService.findAllByRolesProjects(filter);
   }
   @Mutation(() => Developer)

@@ -44,12 +44,11 @@ export class ProjectsService {
 
   async createProject(project: CreateProjectDto): Promise<Project> {
     const roles = await this.rolesService.findRolesByIds(project.rolesIds);
-    const developers = await this.devService.findDevelopersByIds(
-      project.developerIds,
-    );
+    const developers = project?.developerIds
+      ? await this.devService.findDevelopersByIds(project.developerIds)
+      : [];
     project['roles'] = roles;
     project['developers'] = developers;
-    console.log(project);
     const newDeveloper = this.projectRepository.create(project);
     return this.projectRepository.save(newDeveloper);
   }
@@ -72,5 +71,29 @@ export class ProjectsService {
       relations: ['developers'],
     });
     return project.developers;
+  }
+
+  validateSameRolesDeveloperAndProject(project: Project, developer: Developer) {
+    const roles = project.roles.map((role) => role.id);
+    const developerRoles = developer.roles.map((role) => role.id);
+    const sameRoles = roles.filter((role) => developerRoles.includes(role));
+    if (sameRoles.length === 0) {
+      throw new Error(
+        `The developer ${developer.name} does not have the roles for the project ${project.name}`,
+      );
+    }
+  }
+
+  async assignDeveloperToProject(projectId: number, developerId: number) {
+    const project = await this.projectRepository.findOne({
+      where: {
+        id: projectId,
+      },
+      relations: ['developers', 'roles'],
+    });
+    const developer = await this.devService.findDeveloperById(developerId);
+    this.validateSameRolesDeveloperAndProject(project, developer);
+    project.developers = [...project.developers, developer];
+    return this.projectRepository.save(project);
   }
 }

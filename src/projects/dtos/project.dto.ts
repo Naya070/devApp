@@ -51,3 +51,13 @@ export class FilterProjectDto {
   @Field(() => [Number], { nullable: true })
   rolesIds?: number[];
 }
+
+@InputType()
+export class AssignDeveloperToProjectDto {
+  @IsNotEmpty()
+  @Field(() => Int)
+  projectId: number;
+  @IsNotEmpty()
+  @Field(() => Int)
+  developerId: number;
+}
