@@ -24,12 +24,10 @@ export class DevelopersResolver {
   findDeveloperById(@Args('id', { type: () => Int }) id: number) {
     return this.devService.findDeveloperById(id);
   }
-  // @Query(() => [Developer])
-  // filterProjectsByRolesAndStatus(
-  //   @Args('filter', { nullable: true }) filter?: FilterDeveloperDto,
-  // ) {
-  //   return this.developerService.findAll(filter);
-  // }
+  @Query(() => [Developer])
+  findAll(@Args('filter', { nullable: true }) filter?: FilterDeveloperDto) {
+    return this.devService.findAllByRolesProjects(filter);
+  }
   @Mutation(() => Developer)
   createDeveloper(@Args('DeveloperInput') DeveloperInput: CreateDeveloperDto) {
     return this.devService.createDeveloper(DeveloperInput);

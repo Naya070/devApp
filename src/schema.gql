@@ -34,10 +34,16 @@ type Developer {
 type Query {
   findAllDeveloper: [Developer!]!
   findDeveloperById(id: Int!): Project!
+  findAll(filter: FilterDeveloperDto): [Developer!]!
   findAllRoles: [Rol!]!
   findRolById(id: Int!): Rol!
   findAllByRolStatus(filter: FilterProjectDto): [Project!]!
   findProjectById(id: Int!): Project!
+}
+
+input FilterDeveloperDto {
+  rolesIds: [Float!]
+  projects: [Float!]
 }
 
 input FilterProjectDto {
