@@ -39,3 +39,15 @@ export class CreateProjectDto {
 }
 
 export class UpdateProjectDto extends PartialType(CreateProjectDto) {}
+
+@InputType()
+export class FilterProjectDto {
+  @IsEnum(statusType)
+  @IsNotEmpty()
+  @IsOptional()
+  @Field(() => statusType, { nullable: true })
+  status?: statusType;
+  @IsOptional()
+  @Field(() => [Number], { nullable: true })
+  rolesIds?: number[];
+}
