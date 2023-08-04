@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Developer } from '../entities/developer.entity';
 import { CreateDeveloperDto, UpdateDeveloperDto } from '../dtos/developer.dto';
 import { Rol } from 'src/roles/entities/rol.entity';
@@ -20,6 +20,13 @@ export class DevelopersService {
     return this.devRepository.findOne({
       where: {
         id,
+      },
+    });
+  }
+  async findDevelopersByIds(ids: number[]): Promise<Developer[]> {
+    return this.devRepository.find({
+      where: {
+        id: In(ids),
       },
     });
   }

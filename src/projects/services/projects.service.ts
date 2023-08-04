@@ -5,11 +5,14 @@ import { Project } from '../entities/projects.entity';
 import { CreateProjectDto, UpdateProjectDto } from '../dtos/project.dto';
 import { RolesService } from 'src/roles/services/roles.service';
 import { Rol } from 'src/roles/entities/rol.entity';
+import { DevelopersService } from 'src/developers/services/developers.service';
+import { Developer } from 'src/developers/entities/developer.entity';
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(Project) private projectRepository: Repository<Project>,
     private rolesService: RolesService,
+    private devService: DevelopersService,
   ) {}
   findAll(): Promise<Project[]> {
     return this.projectRepository.find();
@@ -25,7 +28,11 @@ export class ProjectsService {
 
   async createProject(project: CreateProjectDto): Promise<Project> {
     const roles = await this.rolesService.findRolesByIds(project.rolesIds);
+    const developers = await this.devService.findDevelopersByIds(
+      project.developerIds,
+    );
     project['roles'] = roles;
+    project['developers'] = developers;
     console.log(project);
     const newDeveloper = this.projectRepository.create(project);
     return this.projectRepository.save(newDeveloper);
@@ -39,5 +46,15 @@ export class ProjectsService {
       relations: ['roles'],
     });
     return project.roles;
+  }
+
+  async getDevelopers(id: number): Promise<Developer[]> {
+    const project = await this.projectRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['developers'],
+    });
+    return project.developers;
   }
 }

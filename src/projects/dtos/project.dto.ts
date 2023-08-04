@@ -33,7 +33,6 @@ export class CreateProjectDto {
   @IsOptional()
   @Field(() => [Number], { nullable: true })
   rolesIds?: number[];
-  @IsArray()
   @IsNotEmpty()
   @Field(() => [Number], { nullable: true })
   developerIds?: number[];
