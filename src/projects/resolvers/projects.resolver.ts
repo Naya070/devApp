@@ -9,7 +9,7 @@ import {
 } from '@nestjs/graphql';
 import { ProjectsService } from '../services/projects.service';
 import { Project } from '../entities/projects.entity';
-import { CreateProjectDto, UpdateProjectDto } from '../dtos/project.dto';
+import { CreateProjectDto } from '../dtos/project.dto';
 import { Rol } from 'src/roles/entities/rol.entity';
 @Resolver(Project)
 export class ProjectsResolver {
