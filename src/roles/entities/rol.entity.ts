@@ -1,11 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { Project } from 'src/projects/entities/projects.entity';
 import { Developer } from 'src/developers/entities/developer.entity';
 
@@ -14,16 +8,13 @@ import { Developer } from 'src/developers/entities/developer.entity';
 export class Rol {
   //id
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
   //name
   @Column({ type: 'varchar', length: 80, unique: true })
   @Field()
   name: string;
   //developers
-  //No necesita JoinColum porque él automáticamente
-  //sabe que el decorador que tiene la relación
-  //manyToOne es la que debe tener la FK.
   @ManyToMany(() => Developer, (developer) => developer.roles)
   developers: Developer[];
   //ManyToMany relationship

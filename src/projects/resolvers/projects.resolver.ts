@@ -13,7 +13,6 @@ import {
   AssignDeveloperToProjectDto,
   CreateProjectDto,
   FilterProjectDto,
-  UpdateProjectDto,
 } from '../dtos/project.dto';
 import { Rol } from 'src/roles/entities/rol.entity';
 import { Developer } from 'src/developers/entities/developer.entity';
@@ -26,16 +25,11 @@ export class ProjectsResolver {
   ) {
     return this.projectService.findAllByRolStatus(filter);
   }
-
   @Query(() => Project)
-  findDeveloperById(@Args('id', { type: () => Int }) id: number) {
-    return this.projectService.findProjectById(id);
-  }
-  @Query((returns) => Project)
   findProjectById(@Args('id', { type: () => Int }) id: number) {
     return this.projectService.findProjectById(id);
   }
-  @Mutation((returns) => Project)
+  @Mutation(() => Project)
   createProject(@Args('ProjectInput') ProjectInput: CreateProjectDto) {
     return this.projectService.createProject(ProjectInput);
   }

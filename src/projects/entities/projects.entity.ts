@@ -26,7 +26,7 @@ registerEnumType(statusType, {
 export class Project {
   //id
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
   //name
   @Column({ type: 'varchar', length: 80 })
@@ -38,7 +38,7 @@ export class Project {
   description?: string;
   //status
   @Column({ type: 'enum', enum: statusType, nullable: true })
-  @Field((type) => statusType, { nullable: true })
+  @Field(() => statusType, { nullable: true })
   status?: statusType;
   //ManyToMany relationship
   @ManyToMany(() => Rol, (rol) => rol.projects)

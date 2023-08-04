@@ -1,12 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import {
-  IsArray,
-  IsNotEmpty,
-  IsPositive,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { PartialType } from '@nestjs/graphql';
 
 @InputType()

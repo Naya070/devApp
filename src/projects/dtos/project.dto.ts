@@ -4,7 +4,6 @@ import {
   IsString,
   MaxLength,
   MinLength,
-  IsArray,
   IsEnum,
   IsOptional,
 } from 'class-validator';
@@ -24,9 +23,8 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   @Field({ nullable: true })
-  description: string;
+  description?: string;
   @IsEnum(statusType)
-  @IsNotEmpty()
   @IsOptional()
   @Field((type) => statusType, { nullable: true })
   status?: statusType;

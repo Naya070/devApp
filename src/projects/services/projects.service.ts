@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from '../entities/projects.entity';
-import {
-  CreateProjectDto,
-  FilterProjectDto,
-  UpdateProjectDto,
-} from '../dtos/project.dto';
+import { CreateProjectDto, FilterProjectDto } from '../dtos/project.dto';
 import { RolesService } from 'src/roles/services/roles.service';
 import { Rol } from 'src/roles/entities/rol.entity';
 import { DevelopersService } from 'src/developers/services/developers.service';
@@ -18,10 +14,6 @@ export class ProjectsService {
     private rolesService: RolesService,
     private devService: DevelopersService,
   ) {}
-  findAll(): Promise<Project[]> {
-    return this.projectRepository.find();
-  }
-
   async findAllByRolStatus(filter: FilterProjectDto): Promise<Project[]> {
     const roles = filter?.rolesIds
       ? await this.rolesService.findRolesByIds(filter.rolesIds)

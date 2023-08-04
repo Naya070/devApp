@@ -8,16 +8,13 @@ import {
 } from 'typeorm';
 import { Rol } from 'src/roles/entities/rol.entity';
 import { Project } from 'src/projects/entities/projects.entity';
-//TypeOrm
-//Graphql
-//typeScript
 
 @Entity()
 @ObjectType()
 export class Developer {
   //id
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
   //name
   @Column({ type: 'varchar', length: 80, unique: true })
@@ -28,7 +25,9 @@ export class Developer {
   @Field({ nullable: true })
   email?: string;
   //ManyToMany relationship
-  @ManyToMany(() => Rol, (rol) => rol.developers)
+  @ManyToMany(() => Rol, (rol) => rol.developers, {
+    cascade: ['remove'],
+  })
   @JoinTable()
   roles: Rol[];
   //ManyToMany relationship

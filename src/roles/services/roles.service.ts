@@ -43,7 +43,13 @@ export class RolesService {
     return this.rolRepository.save(newRol);
   }
 
-  removeRolById(id: number) {
-    return this.rolRepository.delete(id);
+  async removeRolById(id: number) {
+    const rolRemove = await this.rolRepository.delete(id);
+    console.log(rolRemove);
+    if (rolRemove.affected >= 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -2,14 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Developer } from '../entities/developer.entity';
-import {
-  CreateDeveloperDto,
-  FilterDeveloperDto,
-  UpdateDeveloperDto,
-} from '../dtos/developer.dto';
+import { CreateDeveloperDto, FilterDeveloperDto } from '../dtos/developer.dto';
 import { Rol } from 'src/roles/entities/rol.entity';
 import { RolesService } from 'src/roles/services/roles.service';
-import { FilterProjectDto } from 'src/projects/dtos/project.dto';
 import { Project } from 'src/projects/entities/projects.entity';
 @Injectable()
 export class DevelopersService {
@@ -19,10 +14,6 @@ export class DevelopersService {
     @InjectRepository(Project) private projectRepository: Repository<Project>,
     private rolesService: RolesService,
   ) {}
-  findAll(): Promise<Developer[]> {
-    return this.devRepository.find();
-  }
-
   async findAllByRolesProjects(
     filter?: FilterDeveloperDto,
   ): Promise<Developer[]> {
@@ -77,5 +68,13 @@ export class DevelopersService {
       relations: ['roles'],
     });
     return developer.roles;
+  }
+  async removeDeveloperById(id: number) {
+    const devRemove = await this.devRepository.delete(id);
+    if (devRemove.affected >= 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

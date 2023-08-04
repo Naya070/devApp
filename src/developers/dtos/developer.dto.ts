@@ -6,7 +6,6 @@ import {
   MinLength,
   IsEmail,
   IsOptional,
-  IsInt,
 } from 'class-validator';
 import { PartialType } from '@nestjs/graphql';
 

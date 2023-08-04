@@ -2,9 +2,6 @@ import { Query, Resolver, Mutation, Args, Int } from '@nestjs/graphql';
 import { RolesService } from '../services/roles.service';
 import { Rol } from '../entities/rol.entity';
 import { CreateRolDto, UpdateRolDto } from '../dtos/rol.dto';
-import { DeleteResult } from 'typeorm/driver/mongodb/typings';
-import { type } from 'os';
-
 @Resolver(Rol)
 export class RolesResolver {
   constructor(private rolesService: RolesService) {}
@@ -28,9 +25,9 @@ export class RolesResolver {
     return this.rolesService.updateRol(id, rolInput);
   }
 
-  // @Mutation(() => Rol, { nullable: true })
-  // deleteRol(@Args('id') id: number): boolean {
-  //   const result = this.rolesService.removeRolById(id);
-  //   return true;
-  // }
+  @Mutation(() => Boolean, { nullable: true })
+  async deleteRol(@Args('id') id: number): Promise<boolean> {
+    const result = await this.rolesService.removeRolById(id);
+    return result;
+  }
 }
