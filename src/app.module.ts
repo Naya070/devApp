@@ -24,7 +24,7 @@ import { join } from 'path';
       port: 5432,
       username: 'postgres',
       password: 'postgres',
-      database: 'c',
+      database: 'a',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,

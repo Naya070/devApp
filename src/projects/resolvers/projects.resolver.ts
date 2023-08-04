@@ -20,6 +20,7 @@ import { Developer } from 'src/developers/entities/developer.entity';
 @Resolver(Project)
 export class ProjectsResolver {
   constructor(private projectService: ProjectsService) {}
+  @Query(() => [Project])
   findAllProject(
     @Args('filter', { nullable: true }) filter?: FilterProjectDto,
   ) {

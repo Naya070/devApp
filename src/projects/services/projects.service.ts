@@ -43,9 +43,13 @@ export class ProjectsService {
   }
 
   async createProject(project: CreateProjectDto): Promise<Project> {
-    const roles = await this.rolesService.findRolesByIds(project.rolesIds);
+    const rolesSet = new Set(project.rolesIds);
+    const developersSet = new Set(project.developerIds);
+    const rolesArr = [...rolesSet];
+    const developersArr = [...developersSet];
+    const roles = await this.rolesService.findRolesByIds(rolesArr);
     const developers = project?.developerIds
-      ? await this.devService.findDevelopersByIds(project.developerIds)
+      ? await this.devService.findDevelopersByIds(developersArr)
       : [];
     project['roles'] = roles;
     project['developers'] = developers;

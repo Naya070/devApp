@@ -37,12 +37,18 @@ type Query {
   findAllDevelopers(filter: FilterDeveloperDto): [Developer!]!
   findAllRoles: [Rol!]!
   findRolById(id: Int!): Rol!
+  findAllProject(filter: FilterProjectDto): [Project!]!
   findProjectById(id: Int!): Project!
 }
 
 input FilterDeveloperDto {
   rolesIds: [Float!]
   projects: [Float!]
+}
+
+input FilterProjectDto {
+  status: statusType
+  rolesIds: [Float!]
 }
 
 type Mutation {

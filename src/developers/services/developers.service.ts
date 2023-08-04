@@ -49,6 +49,7 @@ export class DevelopersService {
       where: {
         id,
       },
+      relations: ['roles', 'projects'],
     });
   }
   async findDevelopersByIds(ids: number[]): Promise<Developer[]> {
@@ -59,7 +60,10 @@ export class DevelopersService {
     });
   }
   async createDeveloper(developer: CreateDeveloperDto): Promise<Developer> {
-    const roles = await this.rolesService.findRolesByIds(developer.rolesIds);
+    const rolesArr = await this.rolesService.findRolesByIds(developer.rolesIds);
+    //Evitar repetidos
+    const rolesSet = new Set(rolesArr);
+    const roles = [...rolesSet];
     developer['roles'] = roles;
     const newDeveloper = this.devRepository.create(developer);
     return this.devRepository.save(newDeveloper);
