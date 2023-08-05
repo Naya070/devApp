@@ -70,6 +70,19 @@ export class DevelopersService {
     return developer.roles;
   }
   async removeDeveloperById(id: number) {
+    const developer = await this.devRepository.findOne({
+      relations: {
+        projects: true,
+        roles: true,
+      },
+      where: { id },
+    });
+    //Delete relations from the:
+    //intermediate table developer-project
+    developer.projects = [];
+    //intermediate table developer-rol
+    developer.roles = [];
+    await this.devRepository.save(developer);
     const devRemove = await this.devRepository.delete(id);
     if (devRemove.affected >= 1) {
       return true;

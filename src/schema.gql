@@ -58,6 +58,7 @@ type Mutation {
   deleteRol(id: Float!): Boolean
   createProject(ProjectInput: CreateProjectDto!): Project!
   assignDeveloperToProject(assignDeveloperToProjectInput: AssignDeveloperToProjectDto!): Project!
+  deleteProject(id: Float!): Boolean
 }
 
 input CreateDeveloperDto {

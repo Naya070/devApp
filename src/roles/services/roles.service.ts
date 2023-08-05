@@ -44,8 +44,21 @@ export class RolesService {
   }
 
   async removeRolById(id: number) {
+    const rol = await this.rolRepository.findOne({
+      relations: {
+        developers: true,
+        projects: true,
+      },
+      where: { id },
+    });
+    //Delete relations from the:
+    //intermediate table rol-developer
+    rol.developers = [];
+    //intermediate table rol-projects
+    rol.projects = [];
+    await this.rolRepository.save(rol);
     const rolRemove = await this.rolRepository.delete(id);
-    console.log(rolRemove);
+
     if (rolRemove.affected >= 1) {
       return true;
     } else {

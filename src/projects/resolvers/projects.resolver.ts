@@ -49,4 +49,9 @@ export class ProjectsResolver {
     const { projectId, developerId } = assignDeveloperToProjectInput;
     return this.projectService.assignDeveloperToProject(projectId, developerId);
   }
+  @Mutation(() => Boolean, { nullable: true })
+  async deleteProject(@Args('id') id: number): Promise<boolean> {
+    const result = await this.projectService.removeProjectById(id);
+    return result;
+  }
 }

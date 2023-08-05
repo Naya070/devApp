@@ -26,12 +26,18 @@ export class Developer {
   email?: string;
   //ManyToMany relationship
   @ManyToMany(() => Rol, (rol) => rol.developers, {
-    cascade: ['remove'],
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
   @JoinTable()
   roles: Rol[];
   //ManyToMany relationship
-  @ManyToMany(() => Project, (project) => project.developers)
+  @ManyToMany(() => Project, (project) => project.developers, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinTable()
   projects: Project[];
 }

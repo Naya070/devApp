@@ -92,4 +92,27 @@ export class ProjectsService {
     project.developers = [...project.developers, developer];
     return this.projectRepository.save(project);
   }
+
+  async removeProjectById(id: number) {
+    const project = await this.projectRepository.findOne({
+      relations: {
+        developers: true,
+        roles: true,
+      },
+      where: { id },
+    });
+    //Delete relations from the:
+    //intermediate table rol-developer
+    project.developers = [];
+    //intermediate table rol-projects
+    project.roles = [];
+    await this.projectRepository.save(project);
+    const rolRemove = await this.projectRepository.delete(id);
+
+    if (rolRemove.affected >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
