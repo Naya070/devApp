@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Developer } from '../entities/developer.entity';
-import { CreateDeveloperDto, FilterDeveloperDto } from '../dtos/developer.dto';
+import {
+  CreateDeveloperDto,
+  FilterDeveloperDto,
+  UpdateDeveloperDto,
+} from '../dtos/developer.dto';
 import { Rol } from 'src/roles/entities/rol.entity';
 import { RolesService } from 'src/roles/services/roles.service';
 import { Project } from 'src/projects/entities/projects.entity';
@@ -89,5 +93,24 @@ export class DevelopersService {
     } else {
       return false;
     }
+  }
+  async updateDeveloper(
+    id: number,
+    changes: UpdateDeveloperDto,
+  ): Promise<Developer> {
+    const developer = await this.devRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        projects: true,
+        roles: true,
+      },
+    });
+    developer.projects = [];
+    developer.roles = [];
+    await this.devRepository.save(developer);
+    await this.devRepository.merge(developer, changes);
+    return this.devRepository.save(changes);
   }
 }
