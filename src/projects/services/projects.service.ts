@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Project } from '../entities/projects.entity';
-import { CreateProjectDto, FilterProjectDto } from '../dtos/project.dto';
+import {
+  CreateProjectDto,
+  FilterProjectDto,
+  UpdateProjectDto,
+} from '../dtos/project.dto';
 import { RolesService } from 'src/roles/services/roles.service';
 import { Rol } from 'src/roles/entities/rol.entity';
 import { DevelopersService } from 'src/developers/services/developers.service';
@@ -107,6 +111,44 @@ export class ProjectsService {
       return true;
     } else {
       return false;
+    }
+  }
+
+  async updateProject(id: number, changes: UpdateProjectDto): Promise<Project> {
+    const oldProject = await this.projectRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['roles', 'developers', 'developers.roles'],
+    });
+    const newProject = await this.projectRepository.merge(oldProject, changes);
+    if (changes.rolesIds) {
+      const rolesArr = await this.rolesService.findRolesByIds(changes.rolesIds);
+      newProject['roles'] = rolesArr;
+    }
+
+    if (changes.developerIds) {
+      const developerArr = await this.devService.findDevelopersByIds(
+        changes.developerIds,
+      );
+      newProject['developers'] = developerArr;
+    }
+
+    newProject.developers.forEach((developer) => {
+      this.validateSameRolesProjectAndDeveloper(developer, newProject);
+    });
+
+    return this.projectRepository.save(newProject);
+  }
+
+  validateSameRolesProjectAndDeveloper(developer: Developer, project: Project) {
+    const roles = developer.roles?.map((role) => role.id) || [];
+    const projectRoles = project.roles.map((role) => role.id);
+    const sameRoles = roles.filter((role) => projectRoles.includes(role));
+    if (sameRoles.length === 0) {
+      throw new Error(
+        `Project roles ${project.name} do no match with developer roles ${developer.name}`,
+      );
     }
   }
 }

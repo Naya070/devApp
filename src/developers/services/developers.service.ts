@@ -52,6 +52,7 @@ export class DevelopersService {
       where: {
         id: In(ids),
       },
+      relations: ['roles'],
     });
   }
   async createDeveloper(developer: CreateDeveloperDto): Promise<Developer> {
@@ -111,15 +112,15 @@ export class DevelopersService {
       newDeveloper['roles'] = rolesArr;
     }
 
-    if (changes.projectsIds) {
-      const projectsArr = await this.projectRepository.find({
-        where: {
-          id: In(changes.projectsIds),
-        },
-        relations: ['roles'],
-      });
-      newDeveloper['projects'] = projectsArr;
-    }
+    // if (changes.projectsIds) {
+    //   const projectsArr = await this.projectRepository.find({
+    //     where: {
+    //       id: In(changes.projectsIds),
+    //     },
+    //     relations: ['roles'],
+    //   });
+    //   newDeveloper['projects'] = projectsArr;
+    // }
 
     newDeveloper.projects.forEach((project) => {
       this.validateSameRolesDeveloperAndProject(project, newDeveloper);
@@ -139,5 +140,15 @@ export class DevelopersService {
         `The developer ${developer.name} does not have the roles for the project ${project.name}`,
       );
     }
+  }
+
+  async Arr(id: number): Promise<Developer[]> {
+    const developerArr = await this.devRepository.find({
+      where: {
+        id: id,
+      },
+      relations: ['roles'],
+    });
+    return developerArr;
   }
 }

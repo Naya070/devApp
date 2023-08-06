@@ -13,6 +13,7 @@ import {
   AssignDeveloperToProjectDto,
   CreateProjectDto,
   FilterProjectDto,
+  UpdateProjectDto,
 } from '../dtos/project.dto';
 import { Rol } from 'src/roles/entities/rol.entity';
 import { Developer } from 'src/developers/entities/developer.entity';
@@ -53,5 +54,12 @@ export class ProjectsResolver {
   async deleteProject(@Args('id') id: number): Promise<boolean> {
     const result = await this.projectService.removeProjectById(id);
     return result;
+  }
+  @Mutation(() => Project)
+  updateProject(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('ProjectInput') ProjectInput: UpdateProjectDto,
+  ) {
+    return this.projectService.updateProject(id, ProjectInput);
   }
 }

@@ -45,8 +45,8 @@ export class DevelopersResolver {
   @Mutation(() => Developer)
   updateDeveloper(
     @Args('id', { type: () => Int }) id: number,
-    @Args('DeveloperInput') rolInput: UpdateDeveloperDto,
+    @Args('DeveloperInput') DeveloperInput: UpdateDeveloperDto,
   ) {
-    return this.devService.updateDeveloper(id, rolInput);
+    return this.devService.updateDeveloper(id, DeveloperInput);
   }
 }

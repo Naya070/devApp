@@ -60,6 +60,7 @@ type Mutation {
   createProject(ProjectInput: CreateProjectDto!): Project!
   assignDeveloperToProject(assignDeveloperToProjectInput: AssignDeveloperToProjectDto!): Project!
   deleteProject(id: Float!): Boolean
+  updateProject(id: Int!, ProjectInput: UpdateProjectDto!): Project!
 }
 
 input CreateDeveloperDto {
@@ -70,10 +71,9 @@ input CreateDeveloperDto {
 }
 
 input UpdateDeveloperDto {
-  name: String
+  name: String!
   email: String
   rolesIds: [Float!]
-  projectsIds: [Float!]
 }
 
 input CreateRolDto {
@@ -95,4 +95,12 @@ input CreateProjectDto {
 input AssignDeveloperToProjectDto {
   projectId: Int!
   developerId: Int!
+}
+
+input UpdateProjectDto {
+  name: String
+  description: String
+  status: statusType
+  rolesIds: [Float!]
+  developerIds: [Float!]
 }

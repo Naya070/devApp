@@ -36,6 +36,7 @@ export class CreateProjectDto {
   developerIds?: number[];
 }
 
+@InputType()
 export class UpdateProjectDto extends PartialType(CreateProjectDto) {}
 
 @InputType()
