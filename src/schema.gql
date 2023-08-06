@@ -66,12 +66,14 @@ input CreateDeveloperDto {
   name: String!
   email: String
   rolesIds: [Float!]
+  projectsIds: [Float!]
 }
 
 input UpdateDeveloperDto {
   name: String
   email: String
   rolesIds: [Float!]
+  projectsIds: [Float!]
 }
 
 input CreateRolDto {

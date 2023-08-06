@@ -28,6 +28,10 @@ export class CreateDeveloperDto {
   @IsOptional()
   @Field(() => [Number], { nullable: true })
   rolesIds?: number[];
+
+  @IsOptional()
+  @Field(() => [Number], { nullable: true })
+  projectsIds?: number[];
 }
 
 @InputType()

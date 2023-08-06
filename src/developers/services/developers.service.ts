@@ -98,19 +98,46 @@ export class DevelopersService {
     id: number,
     changes: UpdateDeveloperDto,
   ): Promise<Developer> {
-    const developer = await this.devRepository.findOne({
+    const oldDeveloper = await this.devRepository.findOne({
       where: {
         id,
       },
-      relations: {
-        projects: true,
-        roles: true,
-      },
+      relations: ['roles', 'projects', 'projects.roles'],
     });
-    developer.projects = [];
-    developer.roles = [];
-    await this.devRepository.save(developer);
-    await this.devRepository.merge(developer, changes);
-    return this.devRepository.save(changes);
+
+    const newDeveloper = await this.devRepository.merge(oldDeveloper, changes);
+    if (changes.rolesIds) {
+      const rolesArr = await this.rolesService.findRolesByIds(changes.rolesIds);
+      newDeveloper['roles'] = rolesArr;
+    }
+
+    if (changes.projectsIds) {
+      const projectsArr = await this.projectRepository.find({
+        where: {
+          id: In(changes.projectsIds),
+        },
+        relations: ['roles'],
+      });
+      newDeveloper['projects'] = projectsArr;
+    }
+
+    newDeveloper.projects.forEach((project) => {
+      this.validateSameRolesDeveloperAndProject(project, newDeveloper);
+    });
+
+    console.log(newDeveloper, 'update');
+
+    return this.devRepository.save(newDeveloper);
+  }
+
+  validateSameRolesDeveloperAndProject(project: Project, developer: Developer) {
+    const roles = project.roles?.map((role) => role.id) || [];
+    const developerRoles = developer.roles.map((role) => role.id);
+    const sameRoles = roles.filter((role) => developerRoles.includes(role));
+    if (sameRoles.length === 0) {
+      throw new Error(
+        `The developer ${developer.name} does not have the roles for the project ${project.name}`,
+      );
+    }
   }
 }

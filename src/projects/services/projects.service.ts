@@ -45,8 +45,13 @@ export class ProjectsService {
       : [];
     project['roles'] = roles;
     project['developers'] = developers;
-    const newDeveloper = this.projectRepository.create(project);
-    return this.projectRepository.save(newDeveloper);
+    const newProject = this.projectRepository.create(project);
+
+    developers.forEach((dev) => {
+      this.devService.validateSameRolesDeveloperAndProject(newProject, dev);
+    });
+
+    return this.projectRepository.save(newProject);
   }
 
   async getRoles(id: number): Promise<Rol[]> {
@@ -69,17 +74,6 @@ export class ProjectsService {
     return project.developers;
   }
 
-  validateSameRolesDeveloperAndProject(project: Project, developer: Developer) {
-    const roles = project.roles.map((role) => role.id);
-    const developerRoles = developer.roles.map((role) => role.id);
-    const sameRoles = roles.filter((role) => developerRoles.includes(role));
-    if (sameRoles.length === 0) {
-      throw new Error(
-        `The developer ${developer.name} does not have the roles for the project ${project.name}`,
-      );
-    }
-  }
-
   async assignDeveloperToProject(projectId: number, developerId: number) {
     const project = await this.projectRepository.findOne({
       where: {
@@ -88,7 +82,7 @@ export class ProjectsService {
       relations: ['developers', 'roles'],
     });
     const developer = await this.devService.findDeveloperById(developerId);
-    this.validateSameRolesDeveloperAndProject(project, developer);
+    this.devService.validateSameRolesDeveloperAndProject(project, developer);
     project.developers = [...project.developers, developer];
     return this.projectRepository.save(project);
   }
