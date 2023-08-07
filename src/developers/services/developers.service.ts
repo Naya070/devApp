@@ -112,16 +112,6 @@ export class DevelopersService {
       newDeveloper['roles'] = rolesArr;
     }
 
-    // if (changes.projectsIds) {
-    //   const projectsArr = await this.projectRepository.find({
-    //     where: {
-    //       id: In(changes.projectsIds),
-    //     },
-    //     relations: ['roles'],
-    //   });
-    //   newDeveloper['projects'] = projectsArr;
-    // }
-
     newDeveloper.projects.forEach((project) => {
       this.validateSameRolesDeveloperAndProject(project, newDeveloper);
     });
