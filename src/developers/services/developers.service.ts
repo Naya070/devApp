@@ -129,14 +129,4 @@ export class DevelopersService {
       );
     }
   }
-
-  async Arr(id: number): Promise<Developer[]> {
-    const developerArr = await this.devRepository.find({
-      where: {
-        id: id,
-      },
-      relations: ['roles'],
-    });
-    return developerArr;
-  }
 }
