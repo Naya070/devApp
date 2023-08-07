@@ -126,8 +126,6 @@ export class DevelopersService {
       this.validateSameRolesDeveloperAndProject(project, newDeveloper);
     });
 
-    console.log(newDeveloper, 'update');
-
     return this.devRepository.save(newDeveloper);
   }
 

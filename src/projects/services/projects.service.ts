@@ -147,7 +147,7 @@ export class ProjectsService {
     const sameRoles = roles.filter((role) => projectRoles.includes(role));
     if (sameRoles.length === 0) {
       throw new Error(
-        `Project roles ${project.name} do no match with developer roles ${developer.name}`,
+        `(id: ${project.id}, name: ${project.name}) project roles do no match with (id: ${developer.name}, name: ${developer.name}) developer roles`,
       );
     }
   }
